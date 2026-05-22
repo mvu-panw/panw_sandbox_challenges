@@ -169,11 +169,23 @@ main {
   color: var(--text);
 }
 
+/* ── Section label ── */
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
 /* ── Menu grid ── */
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, 240px);
   gap: 24px;
+  justify-content: center;
 }
 
 .menu-card {
@@ -215,6 +227,11 @@ main {
 .menu-card .card-sub {
   font-size: 0.8rem;
   color: var(--muted);
+}
+.menu-card--disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
 }
 
 /* ── Embed container ── */
