@@ -40,16 +40,17 @@ nav {
   z-index: 100;
 }
 
-nav img.logo { height: 32px; object-fit: contain; }
+nav img.logo { height: 42px; object-fit: contain; }
 
 nav .site-title {
-  font-size: 1.05rem;
+  font-size: 1.37rem;
   font-weight: 600;
   background: var(--gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-decoration: none;
+  margin-left: 16px;
 }
 
 nav .nav-links { margin-left: auto; display: flex; gap: 24px; }

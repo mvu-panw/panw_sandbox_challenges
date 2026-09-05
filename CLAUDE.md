@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
-Static multi-page HTML/CSS/JS site for a "PANW Capture the Flags" event. No build tools, no framework, no dependencies — open any `.html` file directly in a browser or serve with any static file server.
+Static multi-page HTML/CSS/JS site for PANW hands-on sandbox challenges. No build tools, no framework, no dependencies — open any `.html` file directly in a browser or serve with any static file server. The visible terms "CTF" and "Capture the Flag" have been fully replaced site-wide with "Sandbox Challenge" (e.g. card labels like "Cortex XSIAM CTF" are now "Cortex XSIAM Sandbox Challenge") — don't reintroduce either term in new user-facing copy.
 
 ## Development
 ```bash
@@ -15,36 +15,29 @@ python3 -m http.server 8080
 ## File Map
 | File | Purpose |
 |---|---|
-| `index.html` | Registration — collects name+email, sets session, redirects to menu |
-| `menu.html` | Grid of CTF/demo challenges by product family (Prisma/Strata, Cortex, Koi, Idira). "Prisma AIRS Healthcare CTF", "Koi", and "Quantum Security in SCM" cards are live; the rest are disabled "Coming Soon" placeholders |
-| `ctf.html` | Live flow step 1 (Healthcare CTF) — Storylane self-guided demo, links to `ctf-challenge.html` |
-| `ctf-challenge.html` | Live flow step 2 (Healthcare CTF) — instructions + Storylane CTF sandbox embed; links straight out to the Google Doc companion guide and Google Form quiz (external URLs, not `companion.html`/`quiz.html`) |
-| `koi.html` | Live flow step 1 (Koi CTF) — self-guided demo embedding a `launch.paloaltonetworks.com` walkthrough (not Storylane), links to `koi-challenge.html` |
-| `koi-challenge.html` | Live flow step 2 (Koi CTF) — instructions + `launch.paloaltonetworks.com` CTF sandbox embed; links out to a dedicated Google Form quiz. No companion guide button (Koi has none) |
-| `quantum-security.html` | Live flow step 1 (Strata Cloud Manager CTF) — self-guided demo embedding a `launch.paloaltonetworks.com` walkthrough, links to `quantum-security-challenge.html`. Same pattern as `koi.html` |
-| `quantum-security-challenge.html` | Live flow step 2 (Strata Cloud Manager CTF) — instructions + `launch.paloaltonetworks.com` CTF sandbox embed; links out to a dedicated Google Form quiz. Same pattern as `koi-challenge.html` |
-| `demo.html`, `companion.html`, `quiz.html` | Orphaned legacy flow — not linked from `menu.html` or the live CTF pages; only reachable by direct URL or from each other. Keep in mind before editing: changes here don't affect what participants actually see |
-| `scoreboard.html` | Live ranked table from Google Form responses via Apps Script |
-| `not-registered.html` | Shown when registration fails (no auth guard — reachable pre-session) |
-| `assets/css/styles.css` | All styles — PANW Prisma AIRS color scheme |
-| `assets/js/registration.js` | Form submit handler → (currently bypassed) Apps Script lookup → sessionStorage |
+| `index.html` | Site entry point — grid of demo/sandbox challenges by section. Section order: **AI Security** (top), Prisma / Strata, Cortex. AI Security has three live cards — "Agentic Endpoint Security (AES)" (→ `koi.html`), "Prisma AI Gateway" (→ `prisma-ai-gateway.html`), and "Prisma AIRS API Intercept" (→ `prisma-airs-api-intercept.html`); the rest — including the Prisma/Strata placeholder left after removing the Healthcare CTF and Quantum Security in SCM cards — are disabled "Coming Soon" placeholders. The Idira section (a single disabled placeholder card, no linked pages) has been removed. Formerly `menu.html`; the registration gate that used to live at `index.html` has been removed entirely — there is no sign-up step, session, or auth guard anywhere on the site |
+| `koi.html` | Live flow step 1 (AES) — page title/heading is "Agentic Endpoint Security Self-Guided Demo" (filename is still `koi.html`, unchanged). Self-guided demo embedding a `launch.paloaltonetworks.com` walkthrough, with an explicit "Open Demo in New Tab" button linking to the same URL; links to `koi-challenge.html` |
+| `koi-challenge.html` | Live flow step 2 (AES) — page title/heading is "Agentic Endpoint Security Sandbox Challenge" (filename is still `koi-challenge.html`, unchanged). Instructions + `launch.paloaltonetworks.com` sandbox embed; links out to a dedicated Google Form quiz. No companion guide button |
+| `prisma-ai-gateway.html` | Live flow step 1 (Prisma AI Gateway) — same layout as `koi.html`, but the self-guided demo has no embed yet; shows a `.status-center` "not yet available" placeholder instead of an iframe. Links to `prisma-ai-gateway-challenge.html` |
+| `prisma-ai-gateway-challenge.html` | Live flow step 2 (Prisma AI Gateway) — same layout as `koi-challenge.html`. Quiz button href is the placeholder `YOUR_QUIZ_FORM_URL_HERE` (no quiz exists yet); embeds the `launch.paloaltonetworks.com/.../jae4ot6fd2kl6sa2wk73is` sandbox with the `aspect-ratio` pattern, plus an explicit "Open Sandbox in New Tab" button linking to the same URL with `target="_blank"` |
+| `prisma-airs-api-intercept.html` | Live flow step 1 (Prisma AIRS API Intercept) — same layout/placeholder pattern as `prisma-ai-gateway.html`; no self-guided demo embed yet. Links to `prisma-airs-api-intercept-challenge.html` |
+| `prisma-airs-api-intercept-challenge.html` | Live flow step 2 (Prisma AIRS API Intercept) — same layout as `prisma-ai-gateway-challenge.html`. Quiz button href is the placeholder `YOUR_QUIZ_FORM_URL_HERE` (no quiz exists yet); embeds the `launch.paloaltonetworks.com/.../pbv5xz7siw6x5dkuv2siou` sandbox, plus an "Open Sandbox in New Tab" button linking to the same URL |
+| `demo.html`, `companion.html`, `quiz.html` | Orphaned legacy flow — not linked from `index.html` or `koi.html`/`koi-challenge.html`; only reachable by direct URL or from each other. Keep in mind before editing: changes here don't affect what participants actually see |
+| `assets/css/styles.css` | All styles — PANW Prisma AIRS color scheme. Still contains rules for the removed registration form (`.form-group`, `.form-note`, etc.) that are now unused |
 | `assets/js/scoreboard.js` | Fetches scores from Apps Script, parses and renders ranked table |
 | `.gitlab-ci.yml` | GitLab Pages deploy — on push to `main`, copies the whole repo into a `public/` artifact and publishes it. No build step, so anything in the repo root gets deployed as-is |
+| `ctf_page_outline.md`, `storylane.md` | Original planning/spec docs (page-by-page outline, Storylane value prop). Describe the old registration-gated flow and are now out of sync with the site — treat the HTML as source of truth over these |
+| `assets/images/` | Product logos (Prisma/Strata/Cortex family) used in `index.html` cards and navbars |
 
 ## Configuration
-Both JS files share a single constant — `APPS_SCRIPT_URL` — pointing to a deployed Google Apps Script Web App:
+`assets/js/scoreboard.js` points at a deployed Google Apps Script Web App via the `APPS_SCRIPT_URL` constant, calling it with `?action=scores` to fetch quiz responses. To redeploy or swap the script: go to script.google.com → Deploy → New deployment → Web app → Execute as: Me → Access: Anyone → copy the URL into `scoreboard.js`.
 
-- **`assets/js/registration.js`** — calls the script to validate name+email against a pre-approved list
-- **`assets/js/scoreboard.js`** — calls the same script with `?action=scores` to fetch quiz responses
-
-To redeploy or swap the script: go to script.google.com → Deploy → New deployment → Web app → Execute as: Me → Access: Anyone → copy the URL into both files.
-
-**`companion.html`** — `YOUR_GOOGLE_DOC_EMBED_URL_HERE` in the `<iframe src>` still needs a real Google Docs publish URL (File → Share → Publish to web → Embed). Moot for the live flow since `ctf-challenge.html` links to the doc directly instead.
+**`companion.html`** — `YOUR_GOOGLE_DOC_EMBED_URL_HERE` in the `<iframe src>` still needs a real Google Docs publish URL (File → Share → Publish to web → Embed). It's part of the orphaned legacy flow now, not linked from anywhere live.
 
 ## Key Behaviors
-- **Auth guard is inconsistently applied** — don't assume every gated page has it. `menu.html`, `ctf.html`, `ctf-challenge.html`, `koi.html`, `koi-challenge.html`, `quantum-security.html`, `quantum-security-challenge.html`, `scoreboard.html`, and `demo.html` check `sessionStorage.registeredName` (inline `<script>` at the bottom of `<body>`) and redirect to `index.html` if missing. `companion.html` and `quiz.html` currently have **no** guard, despite being conceptually "post-registration" pages — check before relying on the doc comment in the root `CLAUDE.md` files, which describes the intended pattern, not this exception.
-- **Non-Storylane embeds size themselves with the `aspect-ratio` CSS property directly on the `<iframe>`** (`koi.html`, `koi-challenge.html`, `quantum-security.html`, `quantum-security-challenge.html`), not the `padding-bottom` percentage hack used for the Storylane embeds in `ctf.html`/`ctf-challenge.html`. The percentage-padding trick caused visible flicker with the `launch.paloaltonetworks.com` embeds, so don't copy it forward for new `launch.paloaltonetworks.com` pages — copy the `aspect-ratio` pattern instead.
-- **Registration**: validation against the Apps Script is currently bypassed in `registration.js` — any name/email is accepted and stored in `sessionStorage.registeredName`. Re-enable by uncommenting the fetch call.
+- **No registration or auth gate**: the site used to require registering a name/email (stored in `sessionStorage`) before any other page would load. That whole flow — the registration form, `assets/js/registration.js`, `not-registered.html`, and the `sessionStorage.registeredName` guard script at the bottom of every gated page's `<body>` — has been removed. Every page is directly reachable; `index.html` (the old `menu.html`) is the effective home page since GitLab Pages serves it at the root.
+- **Prisma AIRS Healthcare CTF and Quantum Security in SCM were removed**: `ctf.html`, `ctf-challenge.html`, `quantum-security.html`, and `quantum-security-challenge.html` are deleted, along with their cards on `index.html`. The Prisma/Strata section on the menu now only has the disabled "Prisma Access Sandbox Challenge" placeholder.
+- **Nav corner branding**: the top-left nav shows the `panw_RGB_Logo_Negative.png` wordmark (white, for the nav's dark background — not `panw_logo.png`, which is black-on-transparent and used elsewhere, e.g. favicons) next to the site-title text "Sandbox Challenges" — no "PANW" prefix. `nav img.logo` is sized by `height: 42px` only (no fixed width, scales with aspect ratio); `nav .site-title` is `font-size: 1.37rem` with `margin-left: 16px` for breathing room next to the wide wordmark. Both were bumped +30% from their original 32px/1.05rem — keep them proportional if adjusting further.
+- **Non-Storylane embeds size themselves with the `aspect-ratio` CSS property directly on the `<iframe>`** (`koi.html`, `koi-challenge.html`), not the `padding-bottom` percentage hack used for the orphaned Storylane embed in `demo.html`. The percentage-padding trick caused visible flicker with the `launch.paloaltonetworks.com` embeds, so don't copy it forward for new `launch.paloaltonetworks.com` pages — copy the `aspect-ratio` pattern instead.
 - **Scoreboard scoring**: `parseScore()` in `scoreboard.js` handles `"8 / 10"`, `"8/10"`, or raw numeric values; normalizes to a 0–100 percentage. Ties broken by earliest submission timestamp. Refreshes every 60 seconds via `setInterval`.
-- **Session scope**: `sessionStorage` clears when the tab is closed — intentional, so each session requires fresh registration.
-- **No shared templating**: navbar/footer markup is duplicated in every HTML file (per the root `CLAUDE.md` convention) — a layout change means editing every page individually, and it's easy to miss one (e.g. `demo.html` isn't in `menu.html`'s nav the way the other pages are).
+- **No shared templating**: navbar/footer markup is duplicated in every HTML file (per the root `CLAUDE.md` convention) — a layout change means editing every page individually, and it's easy to miss one (e.g. `demo.html` isn't in `index.html`'s nav the way the other pages are).
